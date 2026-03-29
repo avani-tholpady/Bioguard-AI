@@ -1,0 +1,282 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+.app { display: flex; height: 100vh; min-height: 600px; background: #0a0e1a; color: #e2e8f0; font-size: 14px; }
+.sidebar { width: 200px; background: #0d1220; border-right: 0.5px solid #1e2d4a; display: flex; flex-direction: column; padding: 16px 0; flex-shrink: 0; }
+.logo { padding: 0 16px 20px; border-bottom: 0.5px solid #1e2d4a; margin-bottom: 12px; }
+.logo-title { font-size: 15px; font-weight: 500; color: #60a5fa; letter-spacing: 0.5px; }
+.logo-sub { font-size: 10px; color: #475569; margin-top: 2px; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 8px 16px; font-size: 12px; color: #64748b; cursor: pointer; border-left: 2px solid transparent; }
+.nav-item.active { color: #60a5fa; background: #0f1e35; border-left-color: #60a5fa; }
+.nav-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+.nav-section { font-size: 9px; color: #334155; padding: 12px 16px 4px; letter-spacing: 1px; text-transform: uppercase; }
+.status-badge { margin: auto 16px 16px; background: #0f2a1a; border: 0.5px solid #166534; border-radius: 6px; padding: 8px 10px; }
+.status-badge-label { font-size: 9px; color: #4ade80; letter-spacing: 0.5px; }
+.status-badge-val { font-size: 11px; color: #86efac; margin-top: 2px; }
+.main { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.topbar { display: flex; align-items: center; justify-content: space-between; }
+.topbar-title { font-size: 16px; font-weight: 500; color: #e2e8f0; }
+.topbar-right { display: flex; align-items: center; gap: 8px; }
+.pill { font-size: 10px; padding: 3px 10px; border-radius: 20px; }
+.pill-green { background: #0f2a1a; color: #4ade80; border: 0.5px solid #166534; }
+.pill-blue { background: #0c1e35; color: #60a5fa; border: 0.5px solid #1e40af; }
+.metrics { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; }
+.metric-card { background: #0d1220; border: 0.5px solid #1e2d4a; border-radius: 10px; padding: 14px; }
+.metric-label { font-size: 10px; color: #475569; margin-bottom: 6px; }
+.metric-val { font-size: 22px; font-weight: 500; }
+.metric-val.green { color: #4ade80; }
+.metric-val.blue { color: #60a5fa; }
+.metric-val.amber { color: #fbbf24; }
+.metric-val.red { color: #f87171; }
+.metric-sub { font-size: 10px; color: #334155; margin-top: 4px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid3 { display: grid; grid-template-columns: 1.4fr 1fr; gap: 12px; }
+.panel { background: #0d1220; border: 0.5px solid #1e2d4a; border-radius: 10px; padding: 14px; }
+.panel-title { font-size: 11px; color: #64748b; margin-bottom: 12px; letter-spacing: 0.5px; }
+.trust-wrap { display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 8px; padding: 8px 0; }
+.trust-ring-wrap { position: relative; width: 120px; height: 120px; }
+.trust-ring-wrap svg { width: 120px; height: 120px; }
+.trust-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; }
+.trust-score { font-size: 28px; font-weight: 500; color: #4ade80; }
+.trust-lbl { font-size: 9px; color: #475569; }
+.trust-status { font-size: 11px; color: #4ade80; background: #0f2a1a; border: 0.5px solid #166534; border-radius: 4px; padding: 3px 10px; }
+.layers { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+.layer-row { display: flex; align-items: center; gap: 8px; }
+.layer-icon { width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; }
+.layer-icon.ble { background: #0c1e35; color: #60a5fa; }
+.layer-icon.key { background: #1a1200; color: #fbbf24; }
+.layer-icon.ctx { background: #0f1a2e; color: #a78bfa; }
+.layer-info { flex: 1; }
+.layer-name { font-size: 11px; color: #94a3b8; }
+.layer-val { font-size: 10px; color: #475569; }
+.layer-bar-wrap { width: 60px; height: 4px; background: #1e2d4a; border-radius: 2px; overflow: hidden; }
+.layer-bar { height: 100%; border-radius: 2px; }
+.bar-green { background: #4ade80; }
+.bar-blue { background: #60a5fa; }
+.bar-purple { background: #a78bfa; }
+.agents { display: flex; flex-direction: column; gap: 6px; }
+.agent-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; background: #0a0e1a; border: 0.5px solid #1e2d4a; }
+.agent-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.agent-dot.idle { background: #334155; }
+.agent-dot.active { background: #4ade80; box-shadow: 0 0 0 2px #0f2a1a; }
+.agent-name { font-size: 11px; font-weight: 500; color: #94a3b8; flex: 1; }
+.agent-status { font-size: 10px; color: #475569; }
+.agent-status.ok { color: #4ade80; }
+.event-list { display: flex; flex-direction: column; gap: 6px; }
+.event-row { display: flex; align-items: flex-start; gap: 8px; padding: 8px; border-radius: 6px; background: #0a0e1a; }
+.event-tag { font-size: 9px; padding: 2px 6px; border-radius: 4px; flex-shrink: 0; margin-top: 1px; }
+.event-tag.safe { background: #0f2a1a; color: #4ade80; }
+.event-tag.warn { background: #1c1200; color: #fbbf24; }
+.event-tag.info { background: #0c1e35; color: #60a5fa; }
+.event-text { font-size: 11px; color: #64748b; line-height: 1.4; }
+.event-time { font-size: 9px; color: #334155; margin-left: auto; flex-shrink: 0; }
+.chart-bars { display: flex; align-items: flex-end; gap: 4px; height: 70px; padding-top: 8px; }
+.chart-bar { flex: 1; border-radius: 3px 3px 0 0; min-width: 0; }
+.chart-axis { display: flex; justify-content: space-between; margin-top: 4px; }
+.chart-axis span { font-size: 9px; color: #334155; }
+.divider { height: 0.5px; background: #1e2d4a; margin: 4px 0; }
+.section-tag { font-size: 9px; color: #334155; margin-bottom: 8px; letter-spacing: 0.5px; }
+</style>
+
+<div class="app">
+  <div class="sidebar">
+    <div class="logo">
+      <div class="logo-title">BioGuard AI</div>
+      <div class="logo-sub">Security Command Center</div>
+    </div>
+    <div class="nav-section">Monitor</div>
+    <div class="nav-item active"><div class="nav-dot"></div> Dashboard</div>
+    <div class="nav-item"><div class="nav-dot"></div> Trust Score</div>
+    <div class="nav-item"><div class="nav-dot"></div> Sessions</div>
+    <div class="nav-section">Agents</div>
+    <div class="nav-item"><div class="nav-dot"></div> Scout</div>
+    <div class="nav-item"><div class="nav-dot"></div> Analyst</div>
+    <div class="nav-item"><div class="nav-dot"></div> Sentry</div>
+    <div class="nav-item"><div class="nav-dot"></div> Governor</div>
+    <div class="nav-section">Defense</div>
+    <div class="nav-item"><div class="nav-dot"></div> Shadow Mode</div>
+    <div class="nav-item"><div class="nav-dot"></div> Hard Lock</div>
+    <div class="status-badge">
+      <div class="status-badge-label">SYSTEM STATUS</div>
+      <div class="status-badge-val">All Tiers Active</div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title">Live Session Monitor</div>
+      <div class="topbar-right">
+        <div class="pill pill-green">Tier 1 Active</div>
+        <div class="pill pill-blue">Agents Ready</div>
+        <div class="pill pill-green">No Anomalies</div>
+      </div>
+    </div>
+
+    <div class="metrics">
+      <div class="metric-card">
+        <div class="metric-label">Dynamic Trust Score</div>
+        <div class="metric-val green">87</div>
+        <div class="metric-sub">SAFE — Normal Access</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Response Time</div>
+        <div class="metric-val blue">143ms</div>
+        <div class="metric-sub">Under 200ms threshold</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">CPU Impact</div>
+        <div class="metric-val green">0.7%</div>
+        <div class="metric-sub">Tier 1 perception layer</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Sessions Quarantined</div>
+        <div class="metric-val red">2</div>
+        <div class="metric-sub">Hard Lock triggered</div>
+      </div>
+    </div>
+
+    <div class="grid3">
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div class="panel">
+          <div class="panel-title">TRUST SCORE — LIVE</div>
+          <div class="trust-wrap">
+            <div class="trust-ring-wrap">
+              <svg viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="50" fill="none" stroke="#1e2d4a" stroke-width="10"/>
+                <circle cx="60" cy="60" r="50" fill="none" stroke="#4ade80" stroke-width="10"
+                  stroke-dasharray="314" stroke-dashoffset="40" stroke-linecap="round"
+                  transform="rotate(-90 60 60)"/>
+              </svg>
+              <div class="trust-center">
+                <div class="trust-score">87</div>
+                <div class="trust-lbl">/ 100</div>
+              </div>
+            </div>
+            <div class="trust-status">SAFE</div>
+          </div>
+          <div class="divider"></div>
+          <div class="section-tag">VERIFICATION LAYERS</div>
+          <div class="layers">
+            <div class="layer-row">
+              <div class="layer-icon ble">BT</div>
+              <div class="layer-info">
+                <div class="layer-name">BLE Proximity</div>
+                <div class="layer-val">1.1m — In Range</div>
+              </div>
+              <div class="layer-bar-wrap"><div class="layer-bar bar-blue" style="width:95%"></div></div>
+            </div>
+            <div class="layer-row">
+              <div class="layer-icon key">KS</div>
+              <div class="layer-info">
+                <div class="layer-name">Keystroke Rhythm</div>
+                <div class="layer-val">0.3σ deviation</div>
+              </div>
+              <div class="layer-bar-wrap"><div class="layer-bar bar-green" style="width:88%"></div></div>
+            </div>
+            <div class="layer-row">
+              <div class="layer-icon ctx">CX</div>
+              <div class="layer-info">
+                <div class="layer-name">Context Check</div>
+                <div class="layer-val">IP stable, no swaps</div>
+              </div>
+              <div class="layer-bar-wrap"><div class="layer-bar bar-purple" style="width:100%"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">TRUST SCORE — HISTORY (30 min)</div>
+          <div class="chart-bars">
+            <div class="chart-bar bar-green" style="height:75%"></div>
+            <div class="chart-bar bar-green" style="height:82%"></div>
+            <div class="chart-bar bar-green" style="height:78%"></div>
+            <div class="chart-bar bar-green" style="height:70%"></div>
+            <div class="chart-bar" style="height:48%; background:#fbbf24;"></div>
+            <div class="chart-bar" style="height:32%; background:#f87171;"></div>
+            <div class="chart-bar bar-green" style="height:60%"></div>
+            <div class="chart-bar bar-green" style="height:80%"></div>
+            <div class="chart-bar bar-green" style="height:85%"></div>
+            <div class="chart-bar bar-green" style="height:87%"></div>
+          </div>
+          <div class="chart-axis">
+            <span>-30m</span><span>-20m</span><span>-10m</span><span>Now</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div class="panel">
+          <div class="panel-title">CREWAI AGENTS</div>
+          <div class="agents">
+            <div class="agent-row">
+              <div class="agent-dot idle"></div>
+              <div class="agent-name">Telemetry Scout</div>
+              <div class="agent-status ok">Collecting</div>
+            </div>
+            <div class="agent-row">
+              <div class="agent-dot active"></div>
+              <div class="agent-name">Pattern Analyst</div>
+              <div class="agent-status ok">Scoring</div>
+            </div>
+            <div class="agent-row">
+              <div class="agent-dot idle"></div>
+              <div class="agent-name">Proximity Sentry</div>
+              <div class="agent-status ok">BLE + TOTP OK</div>
+            </div>
+            <div class="agent-row">
+              <div class="agent-dot idle"></div>
+              <div class="agent-name">Risk Governor</div>
+              <div class="agent-status">Idle — No Threat</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">RECENT EVENTS</div>
+          <div class="event-list">
+            <div class="event-row">
+              <div class="event-tag safe">SAFE</div>
+              <div class="event-text">TOTP heartbeat verified — token rotated</div>
+              <div class="event-time">0:12s</div>
+            </div>
+            <div class="event-row">
+              <div class="event-tag warn">WARN</div>
+              <div class="event-text">Keystroke deviation 2.1σ — agents woke up, resolved</div>
+              <div class="event-time">4:37m</div>
+            </div>
+            <div class="event-row">
+              <div class="event-tag safe">LOCK</div>
+              <div class="event-text">Session #A12 quarantined — Hard Lock triggered</div>
+              <div class="event-time">18:02m</div>
+            </div>
+            <div class="event-row">
+              <div class="event-tag info">INFO</div>
+              <div class="event-text">BLE RSSI stable at -52 dBm, phone in range</div>
+              <div class="event-time">22:15m</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">DEFENSE MODE</div>
+          <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+            <div style="flex:1; border-radius:6px; border: 0.5px solid #166534; background:#0f2a1a; padding: 10px; text-align:center;">
+              <div style="font-size:10px; color:#4ade80; font-weight:500;">Normal</div>
+              <div style="font-size:9px; color:#166534; margin-top:2px;">Score 80-100</div>
+            </div>
+            <div style="flex:1; border-radius:6px; border: 0.5px solid #1e2d4a; background:#0a0e1a; padding: 10px; text-align:center;">
+              <div style="font-size:10px; color:#475569;">Shadow Mode</div>
+              <div style="font-size:9px; color:#334155; margin-top:2px;">Score 50-79</div>
+            </div>
+            <div style="flex:1; border-radius:6px; border: 0.5px solid #1e2d4a; background:#0a0e1a; padding: 10px; text-align:center;">
+              <div style="font-size:10px; color:#475569;">Hard Lock</div>
+              <div style="font-size:9px; color:#334155; margin-top:2px;">Score 0-49</div>
+            </div>
+          </div>
+          <div style="font-size:10px; color:#334155;">Current: Normal Access — no deception active</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
